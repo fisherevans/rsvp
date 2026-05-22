@@ -1,0 +1,19 @@
+# NFS-backed PVC. The reclaim policy on the nfs-nottinghamvault StorageClass
+# is Retain (set at the cluster level), so even an accidental `kubectl delete
+# pvc` won't wipe the data on the NAS - the directory has to be cleaned up by
+# hand on the NAS.
+#
+# Mounted at /data inside the rsvp pod for both rsvp.db (SQLite) and
+# the per-event upload directories under /data/uploads/.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+    name: rsvp-data
+    namespace: rsvp
+spec:
+    accessModes:
+        - ReadWriteOnce
+    storageClassName: nfs-nottinghamvault
+    resources:
+        requests:
+            storage: 5Gi

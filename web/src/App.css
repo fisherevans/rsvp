@@ -1,0 +1,673 @@
+/* Neobrutalist visual style: bold display headings, hard 2px black borders,
+   hard offset drop shadows (no blur), strong primary accent. Buttons "press
+   down" on hover by translating + shrinking their shadow.
+
+   Per-event content lives inside .event-themed and overrides title font +
+   accent color so hosts can theme their own pages without fighting the UI. */
+
+:root {
+    --ink: #111111;
+    --bg: #f6f3ec;
+    --surface: #ffffff;
+    --surface-alt: #f1ede2;
+    --text: #111111;
+    --muted: #5f5b53;
+    --border: #111111;
+    --border-soft: #d4cebd;
+
+    --accent: #e63946;
+    --accent-hover: #c5202d;
+    --accent-ink: #ffffff;
+
+    --info: #1d4ed8;
+    --warn: #f59e0b;
+    --good: #15803d;
+    --danger: #b91c1c;
+
+    --radius: 6px;
+    --radius-lg: 10px;
+    --shadow-sm: 4px 4px 0 0 var(--ink);
+    --shadow-md: 6px 6px 0 0 var(--ink);
+    --shadow-pop: 0 8px 24px rgba(0, 0, 0, 0.18);
+
+    --ui-heading-font: 'Outfit', system-ui, sans-serif;
+    --ui-body-font: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --ink: #fafafa;
+        --bg: #0f0f12;
+        --surface: #1a1a1f;
+        --surface-alt: #25252b;
+        --text: #fafafa;
+        --muted: #a8a39a;
+        --border: #fafafa;
+        --border-soft: #3a3a44;
+        --accent: #ff4d59;
+        --accent-hover: #ff6b75;
+    }
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--ui-body-font);
+    font-size: 16px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h2,
+h3,
+h4 {
+    font-family: var(--ui-heading-font);
+    font-weight: 900;
+    color: var(--text);
+    margin: 0 0 0.5em;
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+}
+
+h1 {
+    font-size: clamp(2rem, 6vw, 3rem);
+}
+
+h2 {
+    font-size: clamp(1.3rem, 3.5vw, 1.6rem);
+}
+
+h3 {
+    font-size: clamp(1.05rem, 2.5vw, 1.2rem);
+    letter-spacing: 0;
+}
+
+p {
+    margin: 0 0 0.85em;
+}
+
+a {
+    color: var(--accent);
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 3px;
+}
+
+a:hover {
+    color: var(--accent-hover);
+}
+
+button,
+input,
+textarea,
+select {
+    font: inherit;
+    color: inherit;
+}
+
+/* Buttons: pillar of the brutalist style. Hard border, offset shadow,
+   press-down hover. */
+button {
+    cursor: pointer;
+    background: var(--accent);
+    color: var(--accent-ink);
+    border: 2px solid var(--ink);
+    border-radius: var(--radius);
+    padding: 0.55em 1.1em;
+    font-weight: 700;
+    font-family: var(--ui-body-font);
+    letter-spacing: 0.01em;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.06s ease-out, box-shadow 0.06s ease-out, background 0.15s;
+    /* Inline-flex makes icon + text children sit on the same baseline with
+       a consistent gap, without each button having to opt in. */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5em;
+}
+
+button:hover:not(:disabled) {
+    background: var(--accent-hover);
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0 0 var(--ink);
+}
+
+button:active:not(:disabled) {
+    transform: translate(4px, 4px);
+    box-shadow: 0 0 0 0 var(--ink);
+}
+
+button:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    box-shadow: var(--shadow-sm);
+    transform: none;
+}
+
+button.secondary {
+    background: var(--surface);
+    color: var(--text);
+}
+
+button.secondary:hover:not(:disabled) {
+    background: var(--surface-alt);
+}
+
+button.danger {
+    background: var(--danger);
+    color: white;
+}
+
+button.danger:hover:not(:disabled) {
+    background: #8f1213;
+}
+
+/* btn-link: looks like an underlined text link, not a button. For inline
+   toggles like "Update an existing RSVP" or "Multi-day event". */
+button.btn-link {
+    background: transparent;
+    color: var(--accent);
+    border: none;
+    box-shadow: none;
+    padding: 0;
+    font-weight: 500;
+    font-size: 0.9em;
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 3px;
+    text-transform: none;
+    letter-spacing: 0;
+    transform: none;
+}
+button.btn-link:hover:not(:disabled) {
+    color: var(--accent-hover);
+    background: transparent;
+    transform: none;
+    box-shadow: none;
+}
+button.btn-link:active:not(:disabled) {
+    transform: none;
+    box-shadow: none;
+}
+button.btn-link.btn-link-muted {
+    color: var(--muted);
+    text-decoration-style: dotted;
+    font-size: 0.85em;
+}
+button.btn-link.btn-link-muted:hover:not(:disabled) {
+    color: var(--text);
+}
+
+/* btn-bare: strips all the global brutalist button styling. Use when the
+   component sets its own inline styles (pill toggles, suggestion menus,
+   copy icons) and the global hover/transform would fight them. */
+button.btn-bare {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+    color: inherit;
+    font-weight: inherit;
+    font-family: inherit;
+    transform: none;
+    text-transform: none;
+    letter-spacing: 0;
+}
+button.btn-bare:hover:not(:disabled),
+button.btn-bare:active:not(:disabled),
+button.btn-bare:focus:not(:disabled) {
+    transform: none;
+    box-shadow: none;
+}
+
+/* Compact button for list-row affordances (delete attendee, dismiss, etc).
+   Smaller padding + lighter shadow so it doesn't visually dominate the row. */
+button.btn-small {
+    padding: 0.3em 0.7em;
+    font-size: 0.82em;
+    font-weight: 600;
+    box-shadow: 2px 2px 0 0 var(--ink);
+}
+button.btn-small:hover:not(:disabled) {
+    box-shadow: 1px 1px 0 0 var(--ink);
+}
+button.btn-small:active:not(:disabled) {
+    box-shadow: 0 0 0 0 var(--ink);
+}
+
+/* Quiet button: text-only, used inside composites (steppers, etc) where the
+   surrounding container already provides visual weight. */
+button.btn-quiet {
+    background: transparent;
+    color: var(--muted);
+    border: none;
+    box-shadow: none;
+    padding: 0.2em 0.45em;
+    border-radius: 4px;
+    transform: none;
+}
+button.btn-quiet:hover:not(:disabled) {
+    background: var(--surface-alt);
+    color: var(--text);
+    transform: none;
+    box-shadow: none;
+}
+button.btn-quiet:active:not(:disabled) {
+    transform: none;
+    box-shadow: none;
+}
+
+/* Styled native file input. The widest-compatibility upload trigger; no JS
+   forwarding, no hidden elements. ::file-selector-button styles the
+   browser-rendered button portion to match the brutalist treatment. */
+input[type='file'].file-input {
+    background: transparent;
+    border: none;
+    padding: 0;
+    width: auto;
+    font-family: inherit;
+    box-shadow: none;
+    color: var(--muted);
+    font-size: 0.9em;
+}
+input[type='file'].file-input:focus {
+    box-shadow: none;
+}
+input[type='file'].file-input::file-selector-button {
+    background: var(--surface);
+    color: var(--text);
+    border: 2px solid var(--ink);
+    border-radius: var(--radius);
+    padding: 0.55em 1.1em;
+    font-weight: 700;
+    font-family: var(--ui-body-font);
+    font-size: 1rem;
+    margin-right: 1em;
+    cursor: pointer;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.06s ease-out, box-shadow 0.06s ease-out, background 0.15s;
+}
+input[type='file'].file-input::file-selector-button:hover {
+    background: var(--surface-alt);
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0 0 var(--ink);
+}
+input[type='file'].file-input::file-selector-button:active {
+    transform: translate(4px, 4px);
+    box-shadow: 0 0 0 0 var(--ink);
+}
+input[type='file'].file-input:disabled::file-selector-button {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+/* Hides scrollbar but keeps the element scrollable. Used inside WheelPicker
+   columns so the chrome doesn't pollute the brutalist styling. */
+.no-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+}
+
+/* Minimal input used inside the TimePicker. No border (the surrounding
+   picker provides framing), large bold numerals. */
+input.time-input {
+    width: 1.8em;
+    border: none;
+    background: transparent;
+    font-size: 1.5em;
+    font-weight: 700;
+    text-align: center;
+    padding: 0;
+    margin: 0;
+    line-height: 1.1;
+    font-variant-numeric: tabular-nums;
+    border-radius: 4px;
+}
+input.time-input:focus {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    box-shadow: none;
+}
+
+/* Inputs: bold border, no shadow until focus. */
+input,
+textarea,
+select {
+    background: var(--surface);
+    border: 2px solid var(--ink);
+    border-radius: var(--radius);
+    padding: 0.55em 0.75em;
+    width: 100%;
+    transition: box-shadow 0.1s;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    outline: none;
+    box-shadow: 4px 4px 0 0 var(--accent);
+}
+
+/* Bauhaus-style checkboxes + radios: hard border, square/circle, accent fill
+   when checked. appearance:none disables the native chrome so we draw it
+   ourselves with a pseudo-element for the check / dot. */
+input[type='checkbox'],
+input[type='radio'] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 1.25em;
+    height: 1.25em;
+    min-width: 1.25em;
+    border: 2px solid var(--ink);
+    background: var(--surface);
+    margin: 0;
+    padding: 0;
+    cursor: pointer;
+    display: inline-grid;
+    place-content: center;
+    flex-shrink: 0;
+    transition: background 0.12s, box-shadow 0.12s;
+    box-shadow: none;
+}
+
+input[type='checkbox'] {
+    border-radius: 4px;
+}
+
+input[type='radio'] {
+    border-radius: 50%;
+}
+
+input[type='checkbox']:focus-visible,
+input[type='radio']:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px var(--accent);
+}
+
+input[type='checkbox']:checked,
+input[type='radio']:checked {
+    background: var(--accent);
+    border-color: var(--ink);
+}
+
+/* Checkmark: two borders rotated into an L shape. */
+input[type='checkbox']:checked::before {
+    content: '';
+    width: 0.7em;
+    height: 0.4em;
+    border-left: 3px solid var(--accent-ink);
+    border-bottom: 3px solid var(--accent-ink);
+    transform: rotate(-45deg) translate(0.05em, -0.12em);
+}
+
+/* Radio dot: smaller filled circle in the center. The outer ring stays as
+   the input's own border. */
+input[type='radio']:checked {
+    background: var(--surface);
+}
+input[type='radio']:checked::before {
+    content: '';
+    width: 0.65em;
+    height: 0.65em;
+    background: var(--accent);
+    border-radius: 50%;
+}
+
+input[type='checkbox']:disabled,
+input[type='radio']:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+input[type='color'] {
+    height: 2.7em;
+    padding: 0.25em;
+    width: 4.5em;
+    cursor: pointer;
+}
+
+input[type='range'] {
+    height: 1.5em;
+    padding: 0;
+    accent-color: var(--accent);
+    border: none;
+    background: transparent;
+}
+
+input[type='range']:focus {
+    box-shadow: none;
+}
+
+textarea {
+    min-height: 10em;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.92em;
+    line-height: 1.55;
+    resize: vertical;
+}
+
+label {
+    display: block;
+    font-weight: 600;
+    font-size: 0.92em;
+    color: var(--text);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+label > input,
+label > textarea,
+label > select {
+    margin-top: 0.4em;
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: 0;
+}
+
+code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.9em;
+    background: var(--surface-alt);
+    border: 1px solid var(--border-soft);
+    padding: 0.1em 0.35em;
+    border-radius: 4px;
+}
+
+hr {
+    border: none;
+    border-top: 2px solid var(--ink);
+    margin: 1.5em 0;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Layout primitives */
+.container {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 2em 1.25em 4em;
+}
+
+.home {
+    padding: 4em 1.25em;
+    text-align: center;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.row {
+    display: flex;
+    gap: 0.75em;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.stack {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+}
+
+/* Cards: white with hard black border + offset shadow. */
+.card {
+    background: var(--surface);
+    border: 2px solid var(--ink);
+    border-radius: var(--radius-lg);
+    padding: 1.25em;
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 1.25em;
+}
+
+.card h2:first-child,
+.card h3:first-child {
+    margin-top: 0;
+}
+
+.muted {
+    color: var(--muted);
+}
+
+ul {
+    padding-left: 1.25em;
+}
+
+/* Per-event content area. Lives inside .event-themed; the title_font CSS var
+   overrides the heading family, the theme_accent overrides --accent. Headings
+   here are NOT force-uppercased so a script title_font like Pacifico renders
+   naturally. */
+.event-themed h1,
+.event-themed h2,
+.event-themed h3,
+.event-themed h4,
+.event-themed .markdown-body h1,
+.event-themed .markdown-body h2,
+.event-themed .markdown-body h3,
+.event-themed .markdown-body h4 {
+    text-transform: none;
+    letter-spacing: 0;
+    line-height: 1.2;
+}
+.event-themed h1 {
+    font-size: calc(2.4rem * var(--title-scale, 1));
+}
+.event-themed h2 {
+    font-size: calc(1.5rem * var(--title-scale, 1));
+}
+.event-themed h3 {
+    font-size: calc(1.15rem * var(--title-scale, 1));
+}
+.event-themed {
+    font-size: calc(1rem * var(--text-scale, 1));
+}
+
+/* Markdown body styling for rendered event details. */
+.markdown-body {
+    line-height: 1.65;
+}
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3 {
+    margin-top: 1.5em;
+}
+.markdown-body h1:first-child,
+.markdown-body h2:first-child,
+.markdown-body h3:first-child {
+    margin-top: 0;
+}
+.markdown-body img {
+    border: 2px solid var(--ink);
+    border-radius: var(--radius);
+    margin: 0.5em 0;
+}
+.markdown-body code {
+    background: var(--surface-alt);
+}
+.markdown-body pre {
+    background: var(--surface-alt);
+    border: 2px solid var(--ink);
+    padding: 1em;
+    border-radius: var(--radius);
+    overflow-x: auto;
+}
+.markdown-body blockquote {
+    border-left: 4px solid var(--ink);
+    margin: 0.5em 0;
+    padding: 0.25em 1em;
+    color: var(--muted);
+    font-style: italic;
+}
+
+/* react-day-picker calendar. Two concerns:
+   1. Reset our global button styling so day cells aren't dragging the
+      offset shadow / red accent into a calendar grid (creates the crescent-
+      moon effect where every cell looks like a popped button).
+   2. Steer rdp's own theme vars at our accent so the selected day matches. */
+.rdp-root {
+    --rdp-accent-color: var(--accent);
+    --rdp-accent-background-color: var(--accent);
+}
+
+.rdp-root button {
+    background: transparent;
+    color: inherit;
+    border: none;
+    box-shadow: none;
+    padding: 0.5em;
+    font-weight: 500;
+    transform: none;
+    text-transform: none;
+    letter-spacing: 0;
+    border-radius: 50%;
+}
+.rdp-root button:hover:not(:disabled) {
+    background: var(--surface-alt);
+    transform: none;
+    box-shadow: none;
+}
+.rdp-root button:active:not(:disabled) {
+    transform: none;
+    box-shadow: none;
+}
+.rdp-root button:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 1px;
+}
+
+/* Mobile pass: tighten container padding, ensure pickers wrap. */
+@media (max-width: 640px) {
+    .container {
+        padding: 1.25em 0.85em 3em;
+    }
+    .card {
+        padding: 1em;
+        box-shadow: 3px 3px 0 0 var(--ink);
+    }
+    button {
+        box-shadow: 3px 3px 0 0 var(--ink);
+    }
+    h1 {
+        letter-spacing: -0.02em;
+    }
+}

@@ -1,0 +1,80 @@
+# rsvp is a single-replica app backed by SQLite on an NFS PVC. Two replicas
+# would corrupt the database (SQLite isn't designed for shared writers), so
+# the strategy is Recreate: the old pod stops fully before the new one
+# starts. Brief downtime on each deploy in exchange for safe upgrades.
+#
+# Schema migrations run on startup via ensureSchema (idempotent ALTER TABLE
+# ADD COLUMN). The Go process holds the SQLite WAL through a graceful
+# shutdown, so an interrupted deploy doesn't corrupt the file - SIGTERM
+# drains in-flight requests via srv.Shutdown, then defer store.Close commits
+# the WAL.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: rsvp
+    namespace: rsvp
+spec:
+    replicas: 1
+    strategy:
+        type: Recreate
+    selector:
+        matchLabels:
+            app: rsvp
+    template:
+        metadata:
+            labels:
+                app: rsvp
+        spec:
+            terminationGracePeriodSeconds: 30
+            imagePullSecrets:
+                - name: ghcr-secret
+            containers:
+                - name: rsvp
+                  image: ghcr.io/fisherevans/rsvp:latest
+                  imagePullPolicy: Always
+                  ports:
+                      - name: http
+                        containerPort: 8088
+                  env:
+                      - name: RSVP_PUBLIC_BASE_URL
+                        value: 'https://rsvp.fisher.sh'
+                      - name: RSVP_MANAGEMENT_PASSWORD
+                        valueFrom:
+                            secretKeyRef:
+                                name: rsvp-secrets
+                                key: RSVP_MANAGEMENT_PASSWORD
+                      - name: RSVP_SESSION_SECRET
+                        valueFrom:
+                            secretKeyRef:
+                                name: rsvp-secrets
+                                key: RSVP_SESSION_SECRET
+                  volumeMounts:
+                      - name: data
+                        mountPath: /data
+                  livenessProbe:
+                      httpGet:
+                          path: /api/health
+                          port: http
+                      initialDelaySeconds: 5
+                      periodSeconds: 30
+                      timeoutSeconds: 3
+                      failureThreshold: 3
+                  readinessProbe:
+                      httpGet:
+                          path: /api/health
+                          port: http
+                      initialDelaySeconds: 2
+                      periodSeconds: 5
+                      timeoutSeconds: 3
+                      failureThreshold: 3
+                  resources:
+                      requests:
+                          cpu: 50m
+                          memory: 64Mi
+                      limits:
+                          cpu: 500m
+                          memory: 256Mi
+            volumes:
+                - name: data
+                  persistentVolumeClaim:
+                      claimName: rsvp-data

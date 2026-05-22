@@ -1,0 +1,23 @@
+# Build outputs - the Dockerfile rebuilds these in clean layers.
+bin/
+web/node_modules/
+web/dist/
+internal/spa/dist/
+
+# Local data + uploads - never ship a dev DB into the image.
+data/
+
+# Repo metadata + editor cruft.
+.git/
+.gitignore
+.github/
+.idea/
+.vscode/
+*.swp
+.DS_Store
+
+# Tests/scripts/docs aren't needed in the image.
+scripts/
+docs/
+*.md
+!README.md

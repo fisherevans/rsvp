@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+    name: rsvp
+    namespace: rsvp
+spec:
+    selector:
+        app: rsvp
+    ports:
+        - name: http
+          port: 80
+          targetPort: http
