@@ -94,6 +94,12 @@ make smoke           # resets DB + exercises every endpoint
 
 If you change schema, you must also update `ensure.go`. If you add a new route or middleware, run `make smoke` to confirm nothing regressed.
 
+## Issues
+
+This repo follows the homelab issue lifecycle: an issue per ask, `status:in-progress` while
+working, `status:review` with a structured handover comment when delivered, and **only Fisher
+closes an issue**. Full contract: `nottingham-cloud/agent/issue-lifecycle.md`.
+
 ## Changelog
 
 This repo keeps a `changelog/` - a per-entry record of **deliberate changes and the
