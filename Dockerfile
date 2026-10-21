@@ -39,7 +39,7 @@ RUN go build -tags embed_spa -trimpath -ldflags '-s -w' -o /rsvp ./cmd/rsvp
 # --- Stage 3: minimal runtime ---
 # Distroless static: no shell, no package manager, no extras. Just glibc +
 # the binary. Smaller attack surface.
-FROM gcr.io/distroless/static-debian12:nonroot
+FROM gcr.io/distroless/static-debian13:nonroot
 WORKDIR /
 COPY --from=go /rsvp /rsvp
 
