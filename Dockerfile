@@ -16,7 +16,7 @@ COPY web/ web/
 RUN mkdir -p internal/spa && cd web && npm run build
 
 # --- Stage 2: build the Go binary with the SPA embedded ---
-FROM golang:1.25-alpine AS go
+FROM golang:1.26-alpine AS go
 WORKDIR /build
 
 # Module cache layer.

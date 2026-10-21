@@ -12,12 +12,12 @@
   "dependencies": {
     "@phosphor-icons/react": "^2.1.10",
     "date-fns": "^4.2.1",
-    "dompurify": "^3.4.5",
+    "dompurify": "^3.4.17",
     "marked": "^18.0.4",
     "react": "^19.2.6",
     "react-day-picker": "^10.0.1",
     "react-dom": "^19.2.6",
-    "react-router-dom": "^7.15.1"
+    "react-router-dom": "^7.18.4"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
@@ -31,6 +31,6 @@
     "globals": "^17.6.0",
     "typescript": "~6.0.2",
     "typescript-eslint": "^8.59.2",
-    "vite": "^8.0.12"
+    "vite": "^8.3.5"
   }
 }
